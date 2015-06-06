@@ -328,8 +328,9 @@ int main(int argc, char **argv)
 				while (rv==0 && dfp!=NULL)
 				{
 					logger(LOG_DEBUG,"main","ebusd command: %s",dfp->command);
-
-					if (send(sock, dfp->command, strlen(dfp->command), 0) < 0)
+					strcpy(buf,dfp->command);
+					strcat(buf,"\n");
+					if (send(sock, buf, strlen(buf), 0) < 0)
 					{
 						logger(LOG_ERROR,"main","Socket send failed for command %s", dfp->command);
 						ebusd_err_counter++;
@@ -420,8 +421,9 @@ int main(int argc, char **argv)
 					{	int command_id=atoi(ptr);
 						ptr = strtok(NULL, ":");
 						logger(LOG_DEBUG,"main","Got command id %d: %s",command_id,ptr);
-						
-						if (send(sock, ptr, strlen(ptr), 0) < 0)
+						strcpy(buf,ptr);
+						strcat(buf,"\n");
+						if (send(sock, buf, strlen(buf), 0) < 0)
 						{	logger(LOG_ERROR,"main","Socket send failed for command %s", ptr);
 							ebusd_err_counter++;
 							rv=1;
@@ -605,7 +607,7 @@ int read_cfg(char *fname)
 			dfp->field=malloc(strlen(key)+1);
 			strcpy(dfp->field,key);
 			dfp->command=malloc(strlen(value)+1);
-			strcpy(dfp->command,value);				
+			strcpy(dfp->command,value);
 			dfp->period=1;
 			dfp->next=NULL;
 		}
